@@ -1,10 +1,12 @@
 #define red 2
 #define green 3
 #define boom 4
-#define data 7
+#define data A0
 
 int state;
 int count;
+
+int barrier = 150;
 
 void setup() {
   Serial.begin(9600);
@@ -13,14 +15,13 @@ void setup() {
   pinMode(red, OUTPUT);
   pinMode(green, OUTPUT);
   pinMode(boom, OUTPUT);
-  pinMode(data, INPUT);
 }
 
 void loop() {
   digitalWrite(red, LOW);
   digitalWrite(green, LOW);
   digitalWrite(boom, LOW);
-  int input = digitalRead(data);
+  int input = analogRead(data);
   Serial.print(input);
   Serial.print(" ");
   Serial.print(count);
@@ -30,14 +31,14 @@ void loop() {
     digitalWrite(red, HIGH);
     digitalWrite(boom, LOW);
     digitalWrite(green, LOW);
-    if (input == HIGH) {
+    if (input > barrier) {
       state = 1;
     }
   } else if (state == 1) {
     digitalWrite(green, HIGH);
     digitalWrite(red, LOW);
     digitalWrite(boom, LOW);
-    if (input == LOW) {
+    if (input < barrier) {
       state = 2;
     }
   } else if (state == 2) {
